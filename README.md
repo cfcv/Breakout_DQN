@@ -1,7 +1,7 @@
 # Breakout_DQN
 
 ## Introduction
-This project aims to implement the [Deepmind's paper](https://deepmind.com/research/publications/playing-atari-deep-reinforcement-learning) in order to build an agent to play the Breakout Atari game using an OpenAI Gym environment. Knowing that there is not as much computational power and memory available for me now as Deepmind, some parameters as the size of the replay memory and the number of iterations are clearly smaller, degrading the performance. However, trying to compensate this fact a more complex network(with more filters in the convolution layers) and fixed Q-targets were used.
+This project aims to implement the [Deepmind's paper](https://deepmind.com/research/publications/playing-atari-deep-reinforcement-learning) in order to build an agent to play the Breakout Atari game using an OpenAI Gym environment. Knowing that there is not as much computational power and memory available for me now as Deepmind, some parameters as the size of the replay memory and the number of iterations are clearly smaller, degrading the performance. However, trying to compensate this fact, a more complex network(with more filters in the convolution layers) and fixed Q-targets were used.
 
 Check out the resulting video by clicking in the image below:
 
