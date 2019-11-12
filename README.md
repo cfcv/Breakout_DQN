@@ -5,7 +5,7 @@ This project aims to implement the [Deepmind's paper](https://deepmind.com/resea
 
 Check out the resulting video by clicking in the image below:
 
-[![Watch the video](http://i3.ytimg.com/vi/LC6WGWp_Yik/hqdefault.jpg)](https://youtu.be/vH4TlVDMyms)
+[![Watch the video](http://i3.ytimg.com/vi/vH4TlVDMyms/hqdefault.jpg)](https://youtu.be/vH4TlVDMyms)
 
 ## Pre-processing
 Before stocking the state transitions in the replay memory, they are pre-processed. At every time an action is taken, the environment outputs a color image of size 210x160x3, the reward and a boolean indicating if it is a terminal state or not. Each action is repeated 4 times so we can obtain four frames of the game, each frame is converted in grayscale, downsampled and cropped to remove useless information resulting in an image of size 82x72 and therefore, a state of size 82x72x4. 
