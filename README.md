@@ -1,37 +1,35 @@
 # BreakOut_DQN
 
-
-using a deeper network compared to the paper: conv16->conv32->flatten : conv32->conv32->conv64 
-
 ## Introduction
-The goal of this project was to implement the [NVIDIA paper](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf)
-using behavioral cloning to make an End-to-End self-driving car with the Udacity [simulator](https://github.com/udacity/self-driving-car-sim) 
+This project aims to implement the [Deepmind's paper](https://deepmind.com/research/publications/playing-atari-deep-reinforcement-learning) in order to build an agent to play the Breakout Atari game using an OpenAI Gym environment. Knowing that there is not as much computational power and memory available for me now as Deepmind, some parameters as the size of the replay memory and the number of iterations are clearly smaller, degrading the performance. However, trying to compensate this fact a more complex network(with more filters in the convolution) and fixed Q-targets were used.
 
-## Track 1
-*   The Udacity self-driving car simulator provides two tracks, the track 1 is the easy one. So we drive the car manually to get data(images from the cameras and steering angles)from 3 to 4 laps.
+Check out the resulting video by clicking in the image below:
 
-*   The front cameras images will serve as input to our model and it will
-try to predict the respective steering angle, so it will be the output of the model
+## Pre-processing
+Before stocking the state transitions in the replay memory, they are pre-processed. At every time an action is taken, the environment outputs a color image of size 210x160x3, the reward and a boolean indicating if it is a terminal state or not. Each action is repeated 4 times so we can obtain four frames of the game, each frame is converted in grayscale, downsampled and cropped to remove useless information resulting in an image of size 82x72 and therefore, a state of size 82x72x4. 
 
-*   With this data, i trained the pilotNet for 20 epochs,
-what gave me a good result but the car was not able to do the final right turn because of the data imbalance of the training set. In this track there are much more left turns than right turns so almost all the training examples have a negative output(steering angle), thus the probability of the model output a negative value(left turn) is much higher than a positive value(right turn). Besides, there are few turns, so the majority of the steering angles outputs are around zero and thus the model will be biased to output small values.
+##DQN architecture
+For this task, a convolutional neural network was used. Aiming to optimize the amount of memory consumed, I choose to normalize the images on the fly, so then they can be stocked as uint8, consequently, the first layer of the neural network is a normalization layer. It has 3 convolutional layers and 2 dense layers. The convolutional layers have 32, 32 and 64 filters with a kernel size of 8x8, 4x4 and 3x3 with strides of 4x4, 2x2 and 1x1 respectively, each one with a ReLu activation and a He Normal initialization. After the convolutional layers, the features are flattened and a dense layer is added with 512 neurons with a ReLu activation. Finally, the last dense layer, representing the model output, has 4 neurons because we have 4 possible actions.
 
-*   To correct this data imbalance problem i used data augmentation: x and y translation, horrizontal mirroing, random shadows and bright.
-Check out the result by clicking in the image bellow:
+## Parameters
+* Replay memory size: 100 000
+* initialize memory: 50 000
+* Batch size: 32
+* Update target network frequency: every 5 000 frames
+* Number of Episodes: 10 600
+* Number of Frames: 1 000 000
+* initial Epsilon: 1.0
+* Final Epsilon: 0.1(at the frame 600 000)
+* Discount factor(gamma): 0.99
 
-[![Watch the video](http://i3.ytimg.com/vi/LC6WGWp_Yik/hqdefault.jpg)](https://www.youtube.com/watch?v=LC6WGWp_Yik&t=6s)
+In the moment, the same model is training for 50 000 episodes for checking if it will have a way better performance. 
 
-## Track 2
-* This track is much harder compared to the track 1, because it has a lot of sharp turns and shaddows in the road. Here i modified the pilotNet replacing the elu activation by a relu and using batchNormalization in each layer. I trained this model with an one lap data and knowing that this track has several sharp turns i modified the throttle equation   
-from: ```throttle = 1.0 - steering_angle**2 - (speed/limit)**2```  
-to:  ```throttle = np.clip(1.0 - abs(steering_angle) - (speed/limit)**2, -1.0, 1.0)```  
+## Result
+Here, A graphic showing the evolution of the rewards in relation to episodes is shown and a video result have been provided in the introduction section.
 
-so the car will desacelerate more to make a sharp turn and and i multiplied the predicted steering_angle by 1.5 to make the car turn more.
-Check out the result by clicking in the image bellow:
+## Conclusion
+For this task, the renforcement learning algorithm needs a rally long time exploring the environment and training to give good results.
 
-[![Watch the video](http://i3.ytimg.com/vi/VCH0dpJ3Rh4/hqdefault.jpg)](https://www.youtube.com/watch?v=VCH0dpJ3Rh4)
-
-improvements: Experience replay, considerar que perder uma vida é o fim do jogo, double DQN, actor critic.
 ## Future improviments
 * Prioritized Experience Replay 
 * Dueling DQN 
